@@ -41,6 +41,7 @@ var io = require('socket.io').listen(server);
 var fs = require('fs');
 var redis = require('node-redis');
 var redisClient = redis.createClient(REDIS_PORT, REDIS_HOST);
+var favicon = require('serve-favicon');
 
 /**
  * define global variables
@@ -111,14 +112,14 @@ app.use('/img', express.static(ROOT_DIR + '/img'));
 app.use('/js', express.static(ROOT_DIR + '/js'));
 app.use('/css', express.static(ROOT_DIR + '/css'));
 app.use('/data', express.static(ROOT_DIR + '/data'));
-app.use(express.favicon(ROOT_DIR + '/img/favicon.ico'));
+app.use(favicon(ROOT_DIR + '/img/favicon.ico'));
 
 /**
  * Setup one generic route that always points to the index.html
  */
 app.get('/*', function(req, res) {
 	parseLayout(req.url);
-	res.sendfile(__dirname + '/views/index.html');
+	res.sendFile(__dirname + '/views/index.html');
 });
 
 
