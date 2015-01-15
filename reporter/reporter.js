@@ -19,6 +19,7 @@
 const DEFAULT_ANCHOR_HOST = 'localhost';        /* address of the anchor */
 const DEFAULT_ANCHOR_PORT = 23511;              /* targeted port on the anchor */
 const DEFAULT_SERIAL_PORT= '/dev/ttyUSB0';      /* serial port to open */
+const DEFAULT_COMM_TYPE= 'uart';                /* default communication type */
 
 /**
  * Library imports
@@ -36,23 +37,27 @@ var port = DEFAULT_ANCHOR_PORT;
 var dev = DEFAULT_SERIAL_PORT;
 var socket = new JsonSocket(new net.Socket());  /* connection to the anchor */
 var isConnected = false;                        /* flag signals if the reporter is connected to the anchor */
-var uart;
+var commType = DEFAULT_COMM_TYPE;
+var comm;
 
 /**
- * Parse serial port, host and port from command line arguments
+ * Parse communication type, host and port from command line arguments
  *
- * Usage: node reporter.js [DEV] [HOST] [PORT]
+ * Usage: node reporter.js [COMM-TYPE] [DEV] [ANCHOR-HOST] [ANCHOR-PORT]
  */
 function parseCommandLineArgs() {
     process.argv.forEach(function(arg, index) {
         switch (index) {
             case 2:
-                dev = arg;
+                commType = arg;
             break;
             case 3:
-                host = arg;
+                dev = arg;
             break;
             case 4:
+                host = arg;
+            break;
+            case 5:
                 port = arg;
             break;
         }
@@ -90,36 +95,47 @@ socket.on('error', function() {
 
 socket.on('message', function(data) {
     console.log('COMMAND: ' + data.data);
-    uart.write(data.data + "\n");
+    comm.write(data.data + "\n");
 });
+
+function registerDataEvent(comm, commType) {
+    console.log('SERIAL: Let the journalism begin, covering the RIOT - live');
+    comm.on('data', function(data){
+        var time = new Date().getTime();
+        console.log(commType + ':    ' + data);
+        if (isConnected) {
+            socket.sendMessage({'type': 'raw', 'data': data, 'time': time});
+        }
+    });
+}
 
 /**
  * Bootstrapping and starting the reporter
  */
 console.log("RIOT-TV Reporter");
-console.log("Usage: $node reporter.js [DEV] [HOST] [PORT]");
+console.log("Usage: $node reporter.js [uart|socket] [tty*|port] [ANCHOR-HOST] [ANCHOR-PORT]");
 parseCommandLineArgs();
-console.log("INFO:   Connecting to device " + dev + " and anchor at " + host + ":" + port);
+console.log("INFO:   Connecting to device on " + dev + " and anchor at " + host + ":" + port);
 connect();
-uart = new SerialPort(dev, {
-    'baudrate': 115200,
-    'databits': 8,
-    'parity': 'none',
-    'stopbits': 1,
-    'parser': serialPort.parsers.readline("\n")},
-    false);     /* connection to the sensor node over UART */
 
-/**
- * Open the serial port.
- * (event handlers for the serial port)
- */
-uart.open(function() {
-    console.log('SERIAL: Let the journalism begin, covering the RIOT - live');
-    uart.on('data', function(data){
-        var time = new Date().getTime();
-        console.log('UART:    ' + data);
-        if (isConnected) {
-            socket.sendMessage({'type': 'raw', 'data': data, 'time': time});
-        }
+if (commType === 'uart') {
+    comm = new SerialPort(dev, {
+        'baudrate': 115200,
+        'databits': 8,
+        'parity': 'none',
+        'stopbits': 1,
+        'parser': serialPort.parsers.readline("\n")},
+        false);                         /* connection to the sensor node over UART */
+
+    /**
+     * Open the serial port.
+     * (event handlers for the serial port)
+     */
+    uart.open(function() {
+        registerDataEvent(comm, commType);
     });
-});
+}
+else if (commType === 'socket'){
+    comm = net.connect({ port: dev });  /* connection to the sensor node over a TCP-Socket */
+    registerDataEvent(comm, commType);
+}
