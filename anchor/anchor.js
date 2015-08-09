@@ -292,7 +292,7 @@ function reportToRedis(event, nodeid) {
 function scanRawData(data) {
 	// parse line and forward event object
 	var res = undefined;
-	var find = data.data.match(/(m:|p_s:|p_d:|d:|r:|i:|station:).*/g);
+	var find = (new Buffer(data.data)).toString('ascii').match(/(m:|p_s:|p_d:|d:|r:|i:|station:).*/g);
 	if (find != null) {
 		console.log("VIS: Interesting String found: " + find[0]);
 		var part = find[0].split(" ");
