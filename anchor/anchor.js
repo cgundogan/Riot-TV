@@ -296,6 +296,7 @@ function scanRawData(data) {
 	if (find != null) {
 		console.log("VIS: Interesting String found: " + find[0]);
 		var part = find[0].split(" ");
+        console.log("found: " + part[0]);
 		switch (part[0]) {
 			case "m:": 			// message between two nodes
 				if (part.length >= 10) {
