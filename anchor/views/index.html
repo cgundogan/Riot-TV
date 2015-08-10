@@ -4,70 +4,21 @@
     <meta charset="utf-8">
     <title>RIOT TV - Observe the riot</title>
     <link rel="stylesheet" href="css/base.css" />
-    <link rel="stylesheet" href="css/jquery-ui-1.10.3.custom.min.css" />
+    <link rel="stylesheet" href="css/jquery.terminal.css" />
     <script src="/socket.io/socket.io.js"></script>
-    <script src="js/jquery-2.0.3.js"></script>
-    <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
-    <script src="js/sigma-0.1.js"></script>
-    <script src="js/sigma.fisheye.js"></script>
-    <script src="js/sigma.change.js"></script>
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/jquery.terminal-min.js"></script>
+    <script src="js/sigma.min.js"></script>
+    <script src="js/plugins/sigma.plugins.animate.min.js"></script>
     <script src="js/root.js"></script>
   </head>
   <body>
 
-      <div id="layout-head">
-        <div id="head-logos">
-          <img id="logo-safest" src="img/logo_safest.png" alt="Logo Safest" />
-          <div id="head-sponsors">
-            <div>Sponsored by:</div>
-            <a href="/trail"><img id="logo-bmbf" src="img/logo_bmbf.png" alt="Logo BMBF" /></a>
-            <a href="/"><img id="logo-anr" src="img/logo_anr.png" alt="Logo ANR" /></a>
-          </div>
-        </div>
-        <img id="logo-riot" src="img/logo_riot.png" /><span class="logo">-TV</span>
-      </div>
+    <div id="console-button" class="show"></div>
+    <div id="console">
+    </div>
 
-
-      <div id="layout-cont">
-        <div id="tvscreen"></div>
-      </div>
-
-
-      <div id="layout-foot">
-        <div id="console-showhide" class="show"></div>
-        <div id="logo-bar">
-          <img src="img/logo_davico.png" alt="Logo Davico" />
-          <img src="img/logo_flughafen.png" alt="Logo Flughafen" />
-          <img src="img/logo_forum.png" alt="Logo Forum" />
-          <img src="img/logo_frauenhofer.png" alt="Logo Frauenhofer" />
-          <img src="img/logo_fu.png" alt="Logo FU" />
-          <img src="img/logo_haw.png" alt="Logo HAW" />
-          <img src="img/logo_inria.png" alt="Logo Inria" />
-          <img src="img/logo_sagem.png" alt="Logo Sagem" />
-        </div>
-      </div>
-
-
-      <div id="console">
-        <div id="console-inner">
-          <div id="console-sidebar">
-            <div id="console-stations">
-              Available Stations:
-            </div>
-            <div id="console-reporters">
-              Select reporters to command:
-            </div>
-          </div>
-          <div id="console-mainbar">
-            <textarea id="console-output"></textarea>
-            <input id="console-input" type="text" />
-            <button id="console-send">Send</button>
-            <button id="console-sc-attack">Attack!</button>
-            <button id="console-sc-trail">TRAIL</button>
-            <button id="console-sc-initgw">Setup Gateway</button>
-          </div>
-        </div>
-      </div>
+    <div id="tvscreen"></div>
 
   </body>
 </html>

@@ -11,7 +11,6 @@
     "json-socket": ">=0.1.2",
     "socket.io": "*",
     "express": "*",
-    "serve-favicon": "*",
-    "node-redis": "0.1.x"
+    "serve-favicon": "*"
   }
 }
